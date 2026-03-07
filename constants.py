@@ -17,3 +17,8 @@ SHOT_RADIUS = 5
 PLAYER_SHOOT_SPEED = 500
 
 PLAYER_SHOOT_COOLDOWN = 0.3
+
+GRID_SIZE = 5 # must be 5 or greater and odd number 
+START_COL = 0
+START_ROW = GRID_SIZE // 2 # floor division
+
