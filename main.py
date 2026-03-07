@@ -95,24 +95,24 @@ def main():
             # -------------------------
             moved_sector = False
 
-            if player.x < 0:
+            if player.position.x < 0:
                 world.move_sector(-1, 0)
-                player.x = SCREEN_WIDTH
+                player.position.x = SCREEN_WIDTH
                 moved_sector = True
 
-            elif player.x > SCREEN_WIDTH:
+            elif player.position.x > SCREEN_WIDTH:
                 world.move_sector(1, 0)
-                player.x = 0
+                player.position.x = 0
                 moved_sector = True
 
-            elif player.y < 0:
+            elif player.position.y < 0:
                 world.move_sector(0, -1)
-                player.y = SCREEN_HEIGHT
+                player.position.y = SCREEN_HEIGHT
                 moved_sector = True
 
-            elif player.y > SCREEN_HEIGHT:
+            elif player.position.y > SCREEN_HEIGHT:
                 world.move_sector(0, 1)
-                player.y = 0
+                player.position.y = 0
                 moved_sector = True
 
             if moved_sector:
