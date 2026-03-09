@@ -24,12 +24,12 @@ def main():
     # -------------------------------------------------
     game_state = "show_path"
 
-    # Generate valid path at game start
-    path = get_random_path(total_moves=10)
-
-    # Timer for path display
-    path_display_time = 3.0  # seconds
+    # Generate a valid path at game start 
+    path = get_random_path()
+    print("Generated path:", path)
+    path_display_time = 3.0
     path_timer = 0
+    path_visible_steps = 0
 
     # Sprite groups
     updatable = pygame.sprite.Group()
@@ -78,10 +78,16 @@ def main():
 
             path_timer += dt
 
-            draw_minimap(screen, world, path, highlight_current=False)
+        # reveal path gradually
+        reveal_speed = len(path) / path_display_time
+        path_visible_steps = int(path_timer * reveal_speed)
 
-            if path_timer >= path_display_time:
-                game_state = "playing"
+        visible_path = path[:path_visible_steps]
+
+        draw_minimap(screen, world, visible_path, highlight_current=False)
+
+        if path_timer >= path_display_time:
+            game_state = "playing"
 
         # -------------------------------------------------
         # STATE: PLAYING
@@ -187,6 +193,7 @@ def draw_minimap(screen, world, path, highlight_current=True):
     offset_y = 20
 
     for square in range(1, GRID_SIZE * GRID_SIZE + 1):
+
         row, col = num_to_coord(square)
 
         rect = pygame.Rect(
@@ -196,21 +203,25 @@ def draw_minimap(screen, world, path, highlight_current=True):
             cell_size
         )
 
-        # Highlight path
+        # highlight path
         if square in path:
             pygame.draw.rect(screen, "blue", rect)
-        else:
-            pygame.draw.rect(screen, "gray", rect, 1)
 
-    # Highlight current sector
+        # draw grid
+        pygame.draw.rect(screen, "gray", rect, 1)
+
+    # highlight player sector
     if highlight_current:
-        current_x, current_y = world.get_sector()
+
+        row, col = world.get_sector()   # row first, col second
+
         rect = pygame.Rect(
-            offset_x + current_x * cell_size,
-            offset_y + current_y * cell_size,
+            offset_x + col * cell_size,
+            offset_y + row * cell_size,
             cell_size,
             cell_size
         )
+
         pygame.draw.rect(screen, "red", rect, 3)
 
 # run main only if file executed directly

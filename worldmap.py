@@ -31,13 +31,13 @@ class WorldMap:
 
     def get_sector(self):
         """
-        Return current sector coordinates as (x, y).
+        Return current sector coordinates as (y, x), i.e. row, col
         Useful for:
             - debugging
             - minimap rendering
             - path validation
         """
-        return self.world_x, self.world_y
+        return self.world_y, self.world_x
 
     def seed_sector(self):
         """
