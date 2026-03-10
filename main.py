@@ -15,14 +15,19 @@ def main():
     clock = pygame.time.Clock()
     dt = 0
 
+    font_title = pygame.font.SysFont(None, 96)
+    font_prompt = pygame.font.SysFont(None, 36)
+    font_status = pygame.font.SysFont(None, 36)
+
     # -------------------------------------------------
     # GAME STATE OPTIONS:
+    #   "show_title" -> show title 
     #   "show_path"  -> show path at start
     #   "playing"    -> normal gameplay
     #   "paused"     -> minimap display
     #   "game_over"  -> player dead
     # -------------------------------------------------
-    game_state = "show_path"
+    game_state = "title"
 
     # Generate a valid path at game start 
     path = get_random_path()
@@ -30,6 +35,7 @@ def main():
     path_display_time = 3.0
     path_timer = 0
     path_visible_steps = 0
+    path_finished = False
 
     # Sprite groups
     updatable = pygame.sprite.Group()
@@ -58,8 +64,14 @@ def main():
 
             if event.type == pygame.KEYDOWN:
 
+                if game_state == "title":
+                    game_state = "show_path"
+
+                elif game_state == "show_path" and path_finished:
+                    game_state = "playing"
+
                 # Toggle pause
-                if event.key == pygame.K_p:
+                elif event.key == pygame.K_p:
                     if game_state == "playing":
                         game_state = "paused"
                     elif game_state == "paused":
@@ -72,23 +84,85 @@ def main():
         screen.fill("black")
 
         # -------------------------------------------------
+        # STATE: TITLE SCREEN
+        # -------------------------------------------------
+        if game_state == "title":
+
+            title = font_title.render("SPACE MINER", True, "white")
+            prompt = font_prompt.render("Press any key to continue", True, "gray")
+
+            screen.blit(
+                title,
+                (
+                    SCREEN_WIDTH // 2 - title.get_width() // 2,
+                    SCREEN_HEIGHT // 2 - 100
+                )
+            )
+
+            screen.blit(
+                prompt,
+                (
+                    SCREEN_WIDTH // 2 - prompt.get_width() // 2,
+                    SCREEN_HEIGHT // 2 + 20
+                )
+            )
+
+        # -------------------------------------------------
         # STATE: SHOW PATH AT START
         # -------------------------------------------------
-        if game_state == "show_path":
+        elif game_state == "show_path":
 
-            path_timer += dt
+            # --------------------------------
+            # PATH STILL CALCULATING
+            # --------------------------------
+            if not path_finished:
 
-        # reveal path gradually
-        reveal_speed = len(path) / path_display_time
-        path_visible_steps = int(path_timer * reveal_speed)
+                path_timer += dt
 
-        visible_path = path[:path_visible_steps]
+                reveal_speed = len(path) / path_display_time
+                path_visible_steps = int(path_timer * reveal_speed)
 
-        draw_minimap(screen, world, visible_path, highlight_current=False)
+                visible_path = path[:path_visible_steps]
 
-        if path_timer >= path_display_time:
-            game_state = "playing"
+                draw_minimap(screen, world, visible_path, highlight_current=False)
 
+                # animated navicomputer message
+                dots = "." * ((pygame.time.get_ticks() // 400) % 4)
+                status = f"Navicomputer calculating path{dots}"
+
+                status_text = font_status.render(status, True, "white")
+
+                screen.blit(
+                    status_text,
+                    (
+                        SCREEN_WIDTH // 2 - status_text.get_width() // 2,
+                        SCREEN_HEIGHT - 100
+                    )
+                )
+
+                if path_timer >= path_display_time:
+                    path_finished = True
+
+            # --------------------------------
+            # PATH FINISHED
+            # --------------------------------
+            else:
+
+                draw_minimap(screen, world, path, highlight_current=False)
+
+                prompt = font_status.render(
+                    "Press any key to continue",
+                    True,
+                    "white"
+                )
+
+                screen.blit(
+                    prompt,
+                    (
+                        SCREEN_WIDTH // 2 - prompt.get_width() // 2,
+                        SCREEN_HEIGHT - 100
+                    )
+                )
         # -------------------------------------------------
         # STATE: PLAYING
         # -------------------------------------------------
