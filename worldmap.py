@@ -1,5 +1,5 @@
 from constants import GRID_SIZE, START_COL, START_ROW
-
+import random
 
 class WorldMap:
     """
@@ -53,3 +53,18 @@ class WorldMap:
         Check whether a sector coordinate is inside the world grid.
         """
         return 0 <= x < GRID_SIZE and 0 <= y < GRID_SIZE
+    
+    def generate_sector(self):
+
+        objects = {}
+
+        if random.random() < 0.3:
+            objects["planet"] = random.randint(1,2)
+
+        if random.random() < 0.1:
+            objects["blackhole"] = 1
+
+        if random.random() < 0.1:
+            objects["wormhole"] = 1
+
+        return objects

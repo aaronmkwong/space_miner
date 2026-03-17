@@ -3,10 +3,11 @@ from constants import *
 from player import *
 from asteroid import *
 from asteroidfield import *
-from shot import *
 from worldmap import WorldMap
 from gridpath import get_random_path, num_to_coord
-
+from planet import *
+from wormhole import *
+from blackhole import *
 
 def main():
 
@@ -18,6 +19,11 @@ def main():
     font_title = pygame.font.SysFont(None, 96)
     font_prompt = pygame.font.SysFont(None, 36)
     font_status = pygame.font.SysFont(None, 36)
+
+    score = 0
+    font_ui = pygame.font.SysFont(None,36)
+    score_text = font_ui.render(f"Resources: {score}",True,"white")
+    screen.blit(score_text,(20,20))
 
     # -------------------------------------------------
     # GAME STATE OPTIONS:
@@ -41,12 +47,18 @@ def main():
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
-    shots = pygame.sprite.Group()
+    planets = pygame.sprite.Group()
+    blackholes = pygame.sprite.Group()
+    wormholes = pygame.sprite.Group()
 
+    # Containers
     Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = (updatable)
-    Shot.containers = (shots, updatable, drawable)
+    Planet.containers = (planets,drawable)
+    BlackHole.containers = (blackholes,drawable)
+    WormHole.containers = (wormholes,drawable)
+
 
     world = WorldMap()
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PLAYER_RADIUS)
@@ -198,22 +210,26 @@ def main():
             if moved_sector:
                 print("Entered sector:", world.get_sector())
 
-            # -------------------------
-            # COLLISIONS
-            # -------------------------
-            for a in asteroids:
-                if a.collision(player):
-                    game_state = "game_over"
-
-            for a in asteroids:
-                for s in shots:
-                    if s.collision(a):
-                        s.kill()
-                        a.split()
-
             # Draw game world
             for obj in drawable:
                 obj.draw(screen)
+
+            # Resource collection
+            for planet in planets:
+
+                for r in planet.resources:
+
+                    if not r[2]:
+
+                        dot = pygame.Vector2(
+                            planet.position.x + r[0],
+                            planet.position.y + r[1]
+                        )
+
+                    if player.position.distance_to(dot) < 15:
+
+                        r[2] = True
+                        score += 1
 
         # -------------------------------------------------
         # STATE: PAUSED (SHOW MINIMAP)
@@ -247,7 +263,6 @@ def main():
 
         pygame.display.flip()
         dt = clock.tick(60) / 1000
-
 
 # -------------------------------------------------
 # MINIMAP DRAW FUNCTION
