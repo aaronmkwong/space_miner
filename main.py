@@ -22,9 +22,7 @@ def main():
 
     score = 0
     font_ui = pygame.font.SysFont(None,36)
-    score_text = font_ui.render(f"Resources: {score}",True,"white")
-    screen.blit(score_text,(20,20))
-
+    
     # -------------------------------------------------
     # GAME STATE OPTIONS:
     #   "show_title" -> show title 
@@ -35,7 +33,7 @@ def main():
     # -------------------------------------------------
     game_state = "title"
 
-    # Generate a valid path at game start 
+    # GENERATE VALID PATH AT GAMESTART
     path = get_random_path()
     print("Generated path:", path)
     path_display_time = 3.0
@@ -43,7 +41,7 @@ def main():
     path_visible_steps = 0
     path_finished = False
 
-    # Sprite groups
+    # SPRITE GROUPS
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
@@ -51,7 +49,7 @@ def main():
     blackholes = pygame.sprite.Group()
     wormholes = pygame.sprite.Group()
 
-    # Containers
+    # CONTAINERS
     Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = (updatable)
@@ -64,7 +62,7 @@ def main():
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PLAYER_RADIUS)
     asteroidfield = AsteroidField()
 
-    # Main loop
+    # MAIN LOOP
     while True:
 
         # -------------------------
@@ -82,14 +80,14 @@ def main():
                 elif game_state == "show_path" and path_finished:
                     game_state = "playing"
 
-                # Toggle pause
+                # TOGGLE PAUSE
                 elif event.key == pygame.K_p:
                     if game_state == "playing":
                         game_state = "paused"
                     elif game_state == "paused":
                         game_state = "playing"
 
-                # Restart
+                # RESTART
                 if event.key == pygame.K_r and game_state == "game_over":
                     return main()
 
@@ -138,7 +136,7 @@ def main():
 
                 draw_minimap(screen, world, visible_path, highlight_current=False)
 
-                # animated navicomputer message
+                # ANIMATED NAVICOMPUTER MESSAGE
                 dots = "." * ((pygame.time.get_ticks() // 400) % 4)
                 status = f"Navicomputer calculating path{dots}"
 
@@ -210,13 +208,38 @@ def main():
             if moved_sector:
                 print("Entered sector:", world.get_sector())
 
-            # Draw game world
+                # CLEAR OLD OBJECTS
+                planets.empty()
+                blackholes.empty()
+                wormholes.empty()
+
+                # GENERATE NEW SECTOR CONTENT
+                sector = world.generate_sector()
+
+                for _ in range(sector.get("planet", 0)):
+                    Planet(
+                        random.randint(100, SCREEN_WIDTH - 100),
+                        random.randint(100, SCREEN_HEIGHT - 100)
+                    )
+
+                for _ in range(sector.get("blackhole", 0)):
+                    BlackHole(
+                        random.randint(100, SCREEN_WIDTH - 100),
+                        random.randint(100, SCREEN_HEIGHT - 100)
+                    )
+
+                for _ in range(sector.get("wormhole", 0)):
+                    WormHole(
+                        random.randint(100, SCREEN_WIDTH - 100),
+                        random.randint(100, SCREEN_HEIGHT - 100)
+                    )
+
+            # DRAW GAME WORLD
             for obj in drawable:
                 obj.draw(screen)
 
-            # Resource collection
+            # RESOURCE COLLECTION
             for planet in planets:
-
                 for r in planet.resources:
 
                     if not r[2]:
@@ -226,21 +249,78 @@ def main():
                             planet.position.y + r[1]
                         )
 
-                    if player.position.distance_to(dot) < 15:
+                        if player.position.distance_to(dot) < 15:
 
-                        r[2] = True
-                        score += 1
+                            r[2] = True
+                            score += 1
+
+            # BLACK HOLE EFFECTS
+            for bh in blackholes:
+
+                dist = player.position.distance_to(bh.position)
+
+                if dist < bh.radius * 2:
+
+                    direction = bh.position - player.position
+
+                    if direction.length() > 0:
+                        direction.normalize_ip()
+                        player.position += direction * 120 * dt
+                        player.radius *= 0.995
+
+                # GAME OVER
+                if dist < 10:
+                    game_state = "game_over"
+
+            # WORMHOLE TELEPORT
+            for w in wormholes:
+
+                if player.position.distance_to(w.position) < 40:
+
+                    new_row = random.randint(0, GRID_SIZE - 1)
+                    new_col = random.randint(0, GRID_SIZE - 1)
+
+                    world.set_sector(new_row, new_col)
+
+                    # REGENERATE SECTOR AFTER TELEPORT
+                    planets.empty()
+                    blackholes.empty()
+                    wormholes.empty()
+
+                    sector = world.generate_sector()
+
+                    for _ in range(sector.get("planet", 0)):
+                        Planet(random.randint(100, SCREEN_WIDTH - 100),
+                            random.randint(100, SCREEN_HEIGHT - 100))
+
+                    for _ in range(sector.get("blackhole", 0)):
+                        BlackHole(random.randint(100, SCREEN_WIDTH - 100),
+                                random.randint(100, SCREEN_HEIGHT - 100))
+
+                    for _ in range(sector.get("wormhole", 0)):
+                        WormHole(random.randint(100, SCREEN_WIDTH - 100),
+                                random.randint(100, SCREEN_HEIGHT - 100))
+
+                    # RESET PLAYER POSITION
+                    player.position.x = SCREEN_WIDTH / 2
+                    player.position.y = SCREEN_HEIGHT / 2
+
+                    break  # PREVENT MULTIPLE TRIGGERS
+
+            # DISPLAY SCORE
+            score_text = font_ui.render(f"Resources: {score}", True, "white")
+            screen.blit(score_text, (20, 20)) 
 
         # -------------------------------------------------
         # STATE: PAUSED (SHOW MINIMAP)
         # -------------------------------------------------
         elif game_state == "paused":
 
-            # Draw frozen world
+            # DRAW FROZEN WORLD
             for obj in drawable:
                 obj.draw(screen)
 
-            # Overlay minimap
+            # OVERLAY MINIMAP
             draw_minimap(screen, world, path, highlight_current=True)
 
         # -------------------------------------------------
@@ -292,17 +372,17 @@ def draw_minimap(screen, world, path, highlight_current=True):
             cell_size
         )
 
-        # highlight path
+        #HIGHLIGHT PATH
         if square in path:
             pygame.draw.rect(screen, "blue", rect)
 
-        # draw grid
+        # DRAW GRID
         pygame.draw.rect(screen, "gray", rect, 1)
 
-    # highlight player sector
+    # HIGHLIGHT PLAYER SECTOR
     if highlight_current:
 
-        row, col = world.get_sector()   # row first, col second
+        row, col = world.get_sector()   # ROW FIRST, COL SECOND
 
         rect = pygame.Rect(
             offset_x + col * cell_size,
@@ -313,6 +393,6 @@ def draw_minimap(screen, world, path, highlight_current=True):
 
         pygame.draw.rect(screen, "red", rect, 3)
 
-# run main only if file executed directly
+# RUN MAIN ONLY IF FILE EXECUTRED DIRECTLY
 if __name__ == "__main__":
     main()
