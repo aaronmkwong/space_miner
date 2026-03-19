@@ -1,8 +1,6 @@
 import pygame
 from constants import *
 from player import *
-from asteroid import *
-from asteroidfield import *
 from worldmap import WorldMap
 from gridpath import get_random_path, num_to_coord
 from planet import *
@@ -44,23 +42,18 @@ def main():
     # SPRITE GROUPS
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
-    asteroids = pygame.sprite.Group()
     planets = pygame.sprite.Group()
     blackholes = pygame.sprite.Group()
     wormholes = pygame.sprite.Group()
 
     # CONTAINERS
     Player.containers = (updatable, drawable)
-    Asteroid.containers = (asteroids, updatable, drawable)
-    AsteroidField.containers = (updatable)
     Planet.containers = (planets,drawable)
     BlackHole.containers = (blackholes,drawable)
     WormHole.containers = (wormholes,drawable)
 
-
     world = WorldMap()
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, PLAYER_RADIUS)
-    asteroidfield = AsteroidField()
 
     # MAIN LOOP
     while True:
@@ -280,7 +273,7 @@ def main():
                     new_row = random.randint(0, GRID_SIZE - 1)
                     new_col = random.randint(0, GRID_SIZE - 1)
 
-                    world.set_sector(new_row, new_col)
+                    world.get_sector(new_row, new_col)
 
                     # REGENERATE SECTOR AFTER TELEPORT
                     planets.empty()
