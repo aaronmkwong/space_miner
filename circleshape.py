@@ -3,6 +3,7 @@ import pygame
 # base class for game objects
 # extends sprite class to also store a position, velocity, radius
 # player is triangle with non-visible circle to detect collisions
+
 class CircleShape(pygame.sprite.Sprite):
     def __init__(self, x, y, radius):
         # we will be using this later

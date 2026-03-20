@@ -217,30 +217,45 @@ def main():
                 # GENERATE NEW SECTOR CONTENT
                 key = world.get_sector()
 
-                # Only generate once per sector
                 if key not in visited_sectors:
-                    visited_sectors[key] = world.generate_sector()
 
+                    sector_data = {
+                        "planets": [],
+                        "blackholes": [],
+                        "wormholes": []
+                    }
+
+                    sector_counts = world.generate_sector()
+
+                    for _ in range(sector_counts.get("planet", 0)):
+                        x = random.randint(100, SCREEN_WIDTH - 100)
+                        y = random.randint(100, SCREEN_HEIGHT - 100)
+                        sector_data["planets"].append((x, y))
+
+                    for _ in range(sector_counts.get("blackhole", 0)):
+                        x = random.randint(100, SCREEN_WIDTH - 100)
+                        y = random.randint(100, SCREEN_HEIGHT - 100)
+                        sector_data["blackholes"].append((x, y))
+
+                    for _ in range(sector_counts.get("wormhole", 0)):
+                        x = random.randint(100, SCREEN_WIDTH - 100)
+                        y = random.randint(100, SCREEN_HEIGHT - 100)
+                        sector_data["wormholes"].append((x, y))
+
+                    visited_sectors[key] = sector_data
+                
                 sector = visited_sectors[key]
+            
+                # SPAWN FROM STORED DATA
+                for x, y in sector["planets"]:
+                    Planet(x, y)
 
-                # Spawn based on stored sector data
-                for _ in range(sector.get("planet", 0)):
-                    Planet(
-                        random.randint(100, SCREEN_WIDTH - 100),
-                        random.randint(100, SCREEN_HEIGHT - 100)
-                    )
+                for x, y in sector["blackholes"]:
+                    BlackHole(x, y)
 
-                for _ in range(sector.get("blackhole", 0)):
-                    BlackHole(
-                        random.randint(100, SCREEN_WIDTH - 100),
-                        random.randint(100, SCREEN_HEIGHT - 100)
-                    )
+                for x, y in sector["wormholes"]:
+                    WormHole(x, y)
 
-                for _ in range(sector.get("wormhole", 0)):
-                    WormHole(
-                        random.randint(100, SCREEN_WIDTH - 100),
-                        random.randint(100, SCREEN_HEIGHT - 100)
-                    )
             # DRAW GAME WORLD
             for obj in drawable:
                 obj.draw(screen)
@@ -305,31 +320,46 @@ def main():
 
                     # USE SAME visited_sectors SYSTEM
                     key = world.get_sector()
-
+                    
                     if key not in visited_sectors:
-                        visited_sectors[key] = world.generate_sector()
 
+                        sector_data = {
+                            "planets": [],
+                            "blackholes": [],
+                            "wormholes": []
+                        }
+
+                        sector_counts = world.generate_sector()
+
+                        for _ in range(sector_counts.get("planet", 0)):
+                            x = random.randint(100, SCREEN_WIDTH - 100)
+                            y = random.randint(100, SCREEN_HEIGHT - 100)
+                            sector_data["planets"].append((x, y))
+
+                        for _ in range(sector_counts.get("blackhole", 0)):
+                            x = random.randint(100, SCREEN_WIDTH - 100)
+                            y = random.randint(100, SCREEN_HEIGHT - 100)
+                            sector_data["blackholes"].append((x, y))
+
+                        for _ in range(sector_counts.get("wormhole", 0)):
+                            x = random.randint(100, SCREEN_WIDTH - 100)
+                            y = random.randint(100, SCREEN_HEIGHT - 100)
+                            sector_data["wormholes"].append((x, y))
+
+                        visited_sectors[key] = sector_data
+                    
                     sector = visited_sectors[key]
+                
+                    # SPAWN FROM STORED DATA
+                    for x, y in sector["planets"]:
+                        Planet(x, y)
 
-                    # SPAWN OBJECTS
-                    for _ in range(sector.get("planet", 0)):
-                        Planet(
-                            random.randint(100, SCREEN_WIDTH - 100),
-                            random.randint(100, SCREEN_HEIGHT - 100)
-                        )
+                    for x, y in sector["blackholes"]:
+                        BlackHole(x, y)
 
-                    for _ in range(sector.get("blackhole", 0)):
-                        BlackHole(
-                            random.randint(100, SCREEN_WIDTH - 100),
-                            random.randint(100, SCREEN_HEIGHT - 100)
-                        )
-
-                    for _ in range(sector.get("wormhole", 0)):
-                        WormHole(
-                            random.randint(100, SCREEN_WIDTH - 100),
-                            random.randint(100, SCREEN_HEIGHT - 100)
-                        )
-
+                    for x, y in sector["wormholes"]:
+                        WormHole(x, y)
+                    
                     # RESET PLAYER POSITION
                     player.position.x = SCREEN_WIDTH / 2
                     player.position.y = SCREEN_HEIGHT / 2
