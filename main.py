@@ -29,7 +29,10 @@ def main():
     #   "paused"     -> minimap display
     #   "game_over"  -> player dead
     # -------------------------------------------------
+    
     game_state = "title"
+
+    visited_sectors = {}
 
     # GENERATE VALID PATH AT GAMESTART
     path = get_random_path()
@@ -201,14 +204,26 @@ def main():
             if moved_sector:
                 print("Entered sector:", world.get_sector())
 
-                # CLEAR OLD OBJECTS
-                planets.empty()
-                blackholes.empty()
-                wormholes.empty()
+                # CLEAR OLD OBJECTS REMOVE SPRITE FROM ALL GROUPS
+                for obj in planets:
+                    obj.kill()
+
+                for obj in blackholes:
+                    obj.kill()
+
+                for obj in wormholes:
+                    obj.kill()
 
                 # GENERATE NEW SECTOR CONTENT
-                sector = world.generate_sector()
+                key = world.get_sector()
 
+                # Only generate once per sector
+                if key not in visited_sectors:
+                    visited_sectors[key] = world.generate_sector()
+
+                sector = visited_sectors[key]
+
+                # Spawn based on stored sector data
                 for _ in range(sector.get("planet", 0)):
                     Planet(
                         random.randint(100, SCREEN_WIDTH - 100),
@@ -226,7 +241,6 @@ def main():
                         random.randint(100, SCREEN_WIDTH - 100),
                         random.randint(100, SCREEN_HEIGHT - 100)
                     )
-
             # DRAW GAME WORLD
             for obj in drawable:
                 obj.draw(screen)
@@ -273,32 +287,54 @@ def main():
                     new_row = random.randint(0, GRID_SIZE - 1)
                     new_col = random.randint(0, GRID_SIZE - 1)
 
-                    world.get_sector(new_row, new_col)
+                    # MOVE PLAYER TO NEW SECTOR
+                    world.world_y = new_row
+                    world.world_x = new_col
 
-                    # REGENERATE SECTOR AFTER TELEPORT
-                    planets.empty()
-                    blackholes.empty()
-                    wormholes.empty()
+                    print("Teleported to:", world.get_sector())
 
-                    sector = world.generate_sector()
+                    # CLEAR OLD OBJECTS REMOVE SPRITE FROM ALL GROUPS
+                    for obj in planets:
+                        obj.kill()
 
+                    for obj in blackholes:
+                        obj.kill()
+
+                    for obj in wormholes:
+                        obj.kill()
+
+                    # USE SAME visited_sectors SYSTEM
+                    key = world.get_sector()
+
+                    if key not in visited_sectors:
+                        visited_sectors[key] = world.generate_sector()
+
+                    sector = visited_sectors[key]
+
+                    # SPAWN OBJECTS
                     for _ in range(sector.get("planet", 0)):
-                        Planet(random.randint(100, SCREEN_WIDTH - 100),
-                            random.randint(100, SCREEN_HEIGHT - 100))
+                        Planet(
+                            random.randint(100, SCREEN_WIDTH - 100),
+                            random.randint(100, SCREEN_HEIGHT - 100)
+                        )
 
                     for _ in range(sector.get("blackhole", 0)):
-                        BlackHole(random.randint(100, SCREEN_WIDTH - 100),
-                                random.randint(100, SCREEN_HEIGHT - 100))
+                        BlackHole(
+                            random.randint(100, SCREEN_WIDTH - 100),
+                            random.randint(100, SCREEN_HEIGHT - 100)
+                        )
 
                     for _ in range(sector.get("wormhole", 0)):
-                        WormHole(random.randint(100, SCREEN_WIDTH - 100),
-                                random.randint(100, SCREEN_HEIGHT - 100))
+                        WormHole(
+                            random.randint(100, SCREEN_WIDTH - 100),
+                            random.randint(100, SCREEN_HEIGHT - 100)
+                        )
 
                     # RESET PLAYER POSITION
                     player.position.x = SCREEN_WIDTH / 2
                     player.position.y = SCREEN_HEIGHT / 2
 
-                    break  # PREVENT MULTIPLE TRIGGERS
+                    break
 
             # DISPLAY SCORE
             score_text = font_ui.render(f"Resources: {score}", True, "white")
