@@ -277,22 +277,59 @@ def main():
                             score += 1
 
             # BLACK HOLE EFFECTS
+            affected_by_blackhole = False
+
             for bh in blackholes:
 
                 dist = player.position.distance_to(bh.position)
+                influence_radius = bh.radius * 3
+                min_radius = 3
 
-                if dist < bh.radius * 2:
+                if dist < influence_radius:
 
+                    affected_by_blackhole = True
+
+                    # -----------------------------
+                    # PULL PLAYER
+                    # -----------------------------
                     direction = bh.position - player.position
 
                     if direction.length() > 0:
                         direction.normalize_ip()
-                        player.position += direction * 120 * dt
-                        player.radius *= 0.995
 
-                # GAME OVER
-                if dist < 10:
-                    game_state = "game_over"
+                        strength = (influence_radius - dist) / influence_radius
+                        player.position += direction * (100 + 200 * strength) * dt
+
+                    # -----------------------------
+                    # SHRINK BASED ON DISTANCE
+                    # -----------------------------
+                    shrink_ratio = dist / influence_radius
+                    shrink_ratio = max(0, min(1, shrink_ratio))
+
+                    player.radius = max(min_radius, player.base_radius * shrink_ratio)
+
+                    # -----------------------------
+                    # COLOR FADE (optional)
+                    # -----------------------------
+                    intensity = int(255 * shrink_ratio)
+                    player.color = (intensity, intensity, intensity)
+
+                    # -----------------------------
+                    # GAME OVER CONDITION
+                    # -----------------------------
+                    if dist < 8 and player.radius <= min_radius:
+                        player.color = "black"
+                        game_state = "game_over"
+
+                    break  # only apply closest/first black hole
+
+            # -----------------------------
+            # RESET IF ESCAPED ALL
+            # -----------------------------
+            if not affected_by_blackhole:
+                player.radius = player.base_radius
+                player.color = "white"
+
 
             # WORMHOLE TELEPORT
             for w in wormholes:
