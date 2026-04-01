@@ -5,24 +5,26 @@ class Planet(pygame.sprite.Sprite):
 
     containers = ()
 
-    def __init__(self, x, y, radius=80):
+    def __init__(self, x, y, radius=80, resources=None):
         super().__init__(self.containers)
 
         self.position = pygame.Vector2(x, y)
         self.radius = radius
 
-        self.resources = []
+        if resources is not None:
+            self.resources = resources
+        else:
+            self.resources = []
 
-        for _ in range(random.randint(10,20)):
+            for _ in range(random.randint(10,20)):
+                angle = random.uniform(0,6.28)
+                dist = random.uniform(10,radius-10)
 
-            angle = random.uniform(0,6.28)
-            dist = random.uniform(10,radius-10)
+                direction = pygame.Vector2(1,0).rotate_rad(angle)
+                rx = dist * direction.x
+                ry = dist * direction.y
 
-            rx = dist * pygame.math.Vector2(1,0).rotate_rad(angle).x
-            ry = dist * pygame.math.Vector2(1,0).rotate_rad(angle).y
-
-            self.resources.append([rx,ry,False])
-
+                self.resources.append([rx, ry, False])
 
     def draw(self,screen):
 

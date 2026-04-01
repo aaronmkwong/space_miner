@@ -1,3 +1,4 @@
+
 import pygame
 from constants import *
 from player import *
@@ -230,7 +231,13 @@ def main():
                     for _ in range(sector_counts.get("planet", 0)):
                         x = random.randint(100, SCREEN_WIDTH - 100)
                         y = random.randint(100, SCREEN_HEIGHT - 100)
-                        sector_data["planets"].append((x, y))
+                        planet = Planet(x, y)
+                        sector_data["planets"].append({
+                            "x": x,
+                            "y": y,
+                            "resources": planet.resources
+                        })
+                        planet.kill()  # remove temporary instance
 
                     for _ in range(sector_counts.get("blackhole", 0)):
                         x = random.randint(100, SCREEN_WIDTH - 100)
@@ -247,8 +254,8 @@ def main():
                 sector = visited_sectors[key]
             
                 # SPAWN FROM STORED DATA
-                for x, y in sector["planets"]:
-                    Planet(x, y)
+                for p in sector["planets"]:
+                    Planet(p["x"], p["y"], resources=p["resources"])
 
                 for x, y in sector["blackholes"]:
                     BlackHole(x, y)
@@ -371,7 +378,14 @@ def main():
                         for _ in range(sector_counts.get("planet", 0)):
                             x = random.randint(100, SCREEN_WIDTH - 100)
                             y = random.randint(100, SCREEN_HEIGHT - 100)
-                            sector_data["planets"].append((x, y))
+                            planet = Planet(x, y)
+                            sector_data["planets"].append({
+                                "x": x,
+                                "y": y,
+                                "resources": planet.resources
+                            })
+
+                            planet.kill()  # remove temporary instance
 
                         for _ in range(sector_counts.get("blackhole", 0)):
                             x = random.randint(100, SCREEN_WIDTH - 100)
@@ -388,8 +402,8 @@ def main():
                     sector = visited_sectors[key]
                 
                     # SPAWN FROM STORED DATA
-                    for x, y in sector["planets"]:
-                        Planet(x, y)
+                    for p in sector["planets"]:
+                        Planet(p["x"], p["y"], resources=p["resources"])
 
                     for x, y in sector["blackholes"]:
                         BlackHole(x, y)

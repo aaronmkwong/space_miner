@@ -12,7 +12,6 @@ class Player(CircleShape):
         self.timer = 0  
         self.radius = radius # current changing value, e.g. black hole shrinkage
         self.base_radius = radius # original constant value, e.g. escape black hole reset size
-
         self.color = "white"
 
     def draw(self, screen):

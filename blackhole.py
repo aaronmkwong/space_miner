@@ -23,7 +23,7 @@ class BlackHole(pygame.sprite.Sprite):
 
                 direction.normalize_ip()
                 player.position += direction * 120 * dt
-                player.radius *= 0.995
+                player.radius *= 0.990
 
 
     def draw(self,screen):
