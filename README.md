@@ -3,3 +3,35 @@ A space exploration and resource acquisition game. A ship is piloted in 2D space
 The game window starts on CLI execution of main.py. Using Pygame a game loop ticks many times per second, handling input, updating objects, and drawing to the screen. Sprites (ship, planets, resources, black holes, wormholes) track position/velocity, belong to groups, and interact via accumulation, teleportation, or annihilation. Timers/frames regulate events; logging snapshots help debug state. I made use of vectors, basic physics, state management, and modular design.
 
 These core ideas map to any interactive system—simulation loops, event handling, real-time state updates, and logging/telemetry. I practiced data structures, OOP design, and debugging with logs—useful in game dev, robotics, UI apps, and backend services that process events continuously.
+
+Space Miner 
+
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/00_title_screen.jpg" width="1000" height="1000">
+
+Navicomputer Begins Path 
+
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/01_path_calculation_start.jpg" width="1000" height="1000">
+
+Navicomputer Completes Path 
+
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/02_path_calculation_end.jpg" width="1000" height="1000">
+
+Pilot Encounters Wormhole (Note: current sector location)
+
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/03_wormhole_before.jpg" width="1000" height="1000">
+
+Wormhole Teleports Pilot Off Course (Note: revised sector location)
+
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/04_wormhole_after_game_pause.jpg" width="1000" height="1000">
+
+Resources Are Extracted
+
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/05_resource_collection.jpg" width="1000" height="1000">
+
+Pilot Falls Into Blackhole (Note: small, dimmed triangle in purple cirle)
+
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/06_blackhole_planet.jpg" width="1000" height="1000">
+
+Blackhole Crushes Pilot To Singularity
+
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/07_game_over.jpg" width="1000" height="1000">
