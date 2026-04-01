@@ -6,32 +6,32 @@ These core ideas map to any interactive system—simulation loops, event handlin
 
 Space Miner 
 
-<img src="https://github.com/aaronmkwong/space_miner/blob/main/00_title_screen.jpg" width="1000" height="1000">
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/00_title_screen.jpg" width="1000" height="1000">
 
 Navicomputer Begins Path 
 
-<img src="https://github.com/aaronmkwong/space_miner/blob/main/01_path_calculation_start.jpg" width="1000" height="1000">
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/01_path_calculation_start.jpg" width="1000" height="1000">
 
 Navicomputer Completes Path 
 
-<img src="https://github.com/aaronmkwong/space_miner/blob/main/02_path_calculation_end.jpg" width="1000" height="1000">
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/02_path_calculation_end.jpg" width="1000" height="1000">
 
 Pilot Encounters Wormhole (Note: current sector location)
 
-<img src="https://github.com/aaronmkwong/space_miner/blob/main/03_wormhole_before.jpg" width="1000" height="1000">
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/03_wormhole_before.jpg" width="1000" height="1000">
 
 Wormhole Teleports Pilot Off Course (Note: revised sector location)
 
-<img src="https://github.com/aaronmkwong/space_miner/blob/main/04_wormhole_after_game_pause.jpg" width="1000" height="1000">
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/04_wormhole_after_game_pause.jpg" width="1000" height="1000">
 
 Resources Are Extracted
 
-<img src="https://github.com/aaronmkwong/space_miner/blob/main/05_resource_collection.jpg" width="1000" height="1000">
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/05_resource_collection.jpg" width="1000" height="1000">
 
 Pilot Falls Into Blackhole (Note: small, dimmed triangle in purple cirle)
 
-<img src="https://github.com/aaronmkwong/space_miner/blob/main/06_blackhole_planet.jpg" width="1000" height="1000">
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/06_blackhole_planet.jpg" width="1000" height="1000">
 
 Blackhole Crushes Pilot To Singularity
 
-<img src="https://github.com/aaronmkwong/space_miner/blob/main/07_game_over.jpg" width="1000" height="1000">
+<img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/07_game_over.jpg" width="1000" height="1000">
