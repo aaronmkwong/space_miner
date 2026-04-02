@@ -4,34 +4,42 @@ The game window starts on CLI execution of main.py. Using Pygame a game loop tic
 
 These core ideas map to any interactive system—simulation loops, event handling, real-time state updates, and logging/telemetry. I practiced data structures, OOP design, and debugging with logs—useful in game dev, robotics, UI apps, and backend services that process events continuously.
 
-Space Miner 
+**Space Miner** 
 
 <img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/00_title_screen.jpg" width="1000" height="1000">
 
-Navicomputer Begins Path 
+**Navicomputer Begins Path** 
+
+The navigation system generates a guaranteed valid route through the sector grid by constructing a looped path that always returns to the starting point. It begins with a fixed set of moves to guide the player outward, then creates a randomized rectangular loop by moving down, across, and back up within grid boundaries. This ensures every path is both unpredictable and completable, giving the player a reliable route while maintaining variation between runs.
 
 <img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/01_path_calculation_start.jpg" width="1000" height="1000">
 
-Navicomputer Completes Path 
+**Navicomputer Completes Path** 
 
 <img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/02_path_calculation_end.jpg" width="1000" height="1000">
 
-Pilot Encounters Wormhole (Note: current sector location)
+**Pilot Encounters Wormhole** (Note: current sector location)
 
 <img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/03_wormhole_before.jpg" width="1000" height="1000">
 
-Wormhole Teleports Pilot Off Course (Note: revised sector location)
+**Wormhole Teleports Pilot Off Course** (Note: revised sector location)
+
+Wormholes act as instant-travel gateways that teleport the player to a random sector when approached. When the player enters a small radius around a wormhole, a new sector is randomly selected and loaded, relocating the player and regenerating the surrounding environment. This creates unpredictable traversal across the map, allowing for both strategic escapes and risky jumps into unknown space.
 
 <img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/04_wormhole_after_game_pause.jpg" width="1000" height="1000">
 
-Resources Are Extracted
+**Resources Are Extracted**
+
+Planets contain clusters of mineable resources that are randomly distributed within their radius using polar coordinates, generating offsets from the planet’s center. Each resource is tracked as a position plus a collected flag, and during gameplay the player collects them by moving within a small distance threshold, detected using vector distance checks. When collected, the resource is marked as depleted (no longer drawn) and the player’s score increases, with the state persisting through revisits by storing the resource data.
 
 <img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/05_resource_collection.jpg" width="1000" height="1000">
 
-Pilot Falls Into Blackhole (Note: small, dimmed triangle in purple cirle)
+**Pilot Falls Into Blackhole** (Note: small, dimmed triangle in purple cirle)
+
+The black hole exerts a gravitational pull on the player when they enter an influence radius, applying a force that increases as distance decreases. This is done by calculating a normalized direction vector toward the black hole and scaling movement by a strength factor based on proximity, while simultaneously shrinking the player’s radius and dimming their color to reflect increasing pressure. Their size is reduced to a minimum threshold and the game triggers a game-over state, simulating total collapse.
 
 <img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/06_blackhole_planet.jpg" width="1000" height="1000">
 
-Blackhole Crushes Pilot To Singularity
+**Blackhole Crushes Pilot To Singularity**
 
 <img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/07_game_over.jpg" width="1000" height="1000">
