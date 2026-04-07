@@ -4,6 +4,13 @@ from blackhole import BlackHole
 from wormhole import WormHole
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
+# CLEAR OLD OBJECTS REMOVE SPRITE FROM ALL GROUPS WHEN MOVE SECTOR
+def clear_groups(*groups):
+    for group in groups:
+        for obj in group:
+            obj.kill()
+
+
 def load_sector(world, visited_sectors):
     key = world.get_sector()
                     

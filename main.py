@@ -207,15 +207,8 @@ def main():
                 print("Entered sector:", world.get_sector())
 
                 # CLEAR OLD OBJECTS REMOVE SPRITE FROM ALL GROUPS
-                for obj in planets:
-                    obj.kill()
-
-                for obj in blackholes:
-                    obj.kill()
-
-                for obj in wormholes:
-                    obj.kill()
-
+                clear_groups(planets, blackholes, wormholes)
+                
                 # GENERATE NEW SECTOR CONTENT
                 sector = load_sector(world, visited_sectors)
             
@@ -319,14 +312,7 @@ def main():
                     print("Teleported to:", world.get_sector())
 
                     # CLEAR OLD OBJECTS REMOVE SPRITE FROM ALL GROUPS
-                    for obj in planets:
-                        obj.kill()
-
-                    for obj in blackholes:
-                        obj.kill()
-
-                    for obj in wormholes:
-                        obj.kill()
+                    clear_groups(planets, blackholes, wormholes)
 
                     # USE SAME LOAD SECTOR FUNCTION
                     sector = load_sector(world, visited_sectors)
