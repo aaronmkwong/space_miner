@@ -44,8 +44,8 @@ The black hole exerts a gravitational pull on the player when they enter an infl
 
 <img src="https://github.com/aaronmkwong/space_miner/blob/main/screenshots/07_game_over.jpg" width="1000" height="1000">
 
-**Future Enhancements**
-<br>
+**Future Enhancements**<br>
+
 \* Blackhole change linear to spiral pull, e.g. player.position += perpendicular * 50 * dt<br>
 \* Resource variety, e.g. gold (regular points), rare (extra points), fuel (boost movement)<br>
 \* Wormhole strategy, e.g. preview destination, pair workholes<br>
