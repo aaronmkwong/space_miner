@@ -213,14 +213,7 @@ def main():
                 sector = load_sector(world, visited_sectors)
             
                 # SPAWN FROM STORED DATA
-                for p in sector["planets"]:
-                    Planet(p["x"], p["y"], resources=p["resources"])
-
-                for x, y in sector["blackholes"]:
-                    BlackHole(x, y)
-
-                for x, y in sector["wormholes"]:
-                    WormHole(x, y)
+                spawn(sector)
 
             # DRAW GAME WORLD
             for obj in drawable:
@@ -318,14 +311,7 @@ def main():
                     sector = load_sector(world, visited_sectors)
     
                     # SPAWN FROM STORED DATA
-                    for p in sector["planets"]:
-                        Planet(p["x"], p["y"], resources=p["resources"])
-
-                    for x, y in sector["blackholes"]:
-                        BlackHole(x, y)
-
-                    for x, y in sector["wormholes"]:
-                        WormHole(x, y)
+                    spawn(sector)
                     
                     # RESET PLAYER POSITION
                     player.position.x = SCREEN_WIDTH / 2

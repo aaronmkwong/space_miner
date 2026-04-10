@@ -10,7 +10,7 @@ def clear_groups(*groups):
         for obj in group:
             obj.kill()
 
-
+# LOAD OR GENERATE SECTOR
 def load_sector(world, visited_sectors):
     key = world.get_sector()
                     
@@ -49,3 +49,14 @@ def load_sector(world, visited_sectors):
         visited_sectors[key] = sector_data
 
     return visited_sectors[key]
+
+# SPAWN BODIES FROM STORED DATA
+def spawn(sector):
+        for p in sector["planets"]:
+            Planet(p["x"], p["y"], resources=p["resources"])
+
+        for x, y in sector["blackholes"]:
+            BlackHole(x, y)
+
+        for x, y in sector["wormholes"]:
+            WormHole(x, y)
